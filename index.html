@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anniversary Feed ❤️</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #fafafa;
+      color: #262626;
+      display: flex;
+      justify-content: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .ig-container {
+      width: 100%;
+      max-width: 470px;
+      background: #fff;
+      min-height: 100vh;
+      border-left: 1px solid #dbdbdb;
+      border-right: 1px solid #dbdbdb;
+      padding-bottom: 40px;
+    }
+
+    /* Top Navigation */
+    .nav-bar {
+      height: 50px;
+      border-bottom: 1px solid #dbdbdb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 10;
+    }
+
+    .nav-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    /* Profile Section */
+    .profile-section {
+      padding: 16px;
+      border-bottom: 1px solid #efefef;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 77px;
+      height: 77px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      padding: 2px;
+      margin-right: 20px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      object-fit: cover; 
+      object-position: center 40%;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: #737373;
+    }
+
+    .bio-text {
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    /* Highlights */
+    .highlights {
+      display: flex;
+      gap: 15px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      border-bottom: 1px solid #efefef;
+      scrollbar-width: none;
+    }
+    .highlights::-webkit-scrollbar {
+      display: none;
+    }
+
+    .highlight-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.7rem;
+      color: #262626;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .highlight-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid #c7c7c7;
+      padding: 2px;
+      margin-bottom: 4px;
+      transition: transform 0.1s ease;
+    }
+
+    .highlight-item:active .highlight-circle {
+      transform: scale(0.95);
+    }
+
+    .highlight-circle img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* Feed Post Style */
+    .post {
+      border-bottom: 8px solid #f0f2f5;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      padding: 10px 16px;
+    }
+
+    .post-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+      object-position: center 40%;
+    }
+
+    .post-username {
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    /* Carousel Container & Items */
+    .carousel-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .carousel-container {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .carousel-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .carousel-slide {
+      flex: 0 0 100%;
+      width: 100%;
+      aspect-ratio: 1/1;
+      scroll-snap-align: start;
+      background: #f0f0f0;
+      position: relative;
+    }
+
+    .carousel-slide img, 
+    .carousel-slide video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Tombol Navigasi Kiri & Kanan */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.8);
+      color: #262626;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 6;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      user-select: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .carousel-btn:active {
+      transform: translateY(-50%) scale(0.9);
+    }
+
+    .carousel-btn.prev {
+      left: 10px;
+    }
+
+    .carousel-btn.next {
+      right: 10px;
+    }
+
+    /* Counter Badge (1/3) */
+    .carousel-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(38, 38, 38, 0.7);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 12px;
+      z-index: 5;
+    }
+
+    .post-actions {
+      padding: 10px 16px 6px 16px;
+      display: flex;
+      gap: 14px;
+      font-size: 1.3rem;
+    }
+
+    .like-btn {
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s ease;
+    }
+
+    .like-btn:active {
+      transform: scale(1.3);
+    }
+
+    .post-likes {
+      padding: 0 16px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+    }
+
+    .post-caption {
+      padding: 0 16px 14px 16px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    /* Modal Video Story Profile */
+    .profile-story-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .video-story-card {
+      width: 100%;
+      max-width: 420px;
+      height: 92vh;
+      background: #000;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .story-progress-bar {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      right: 10px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .story-progress-fill {
+      width: 0%;
+      height: 100%;
+      background: #fff;
+    }
+
+    .video-story-header {
+      position: absolute;
+      top: 16px;
+      left: 0;
+      right: 0;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+      z-index: 10;
+    }
+
+    .video-story-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .video-story-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #fff;
+    }
+
+    .video-story-username {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .video-story-time {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-left: 4px;
+    }
+
+    .video-story-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sound-btn, .close-video-story {
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #fff;
+      user-select: none;
+    }
+
+    .story-video-player {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-story-footer {
+      position: absolute;
+      bottom: 15px;
+      left: 0;
+      right: 0;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .story-reply-input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      padding: 10px 16px;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .story-reply-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .story-like-icon {
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    /* Modal Pop-up Viewer Sorotan Video */
+    .story-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .story-card-popup {
+      width: 90%;
+      max-width: 380px;
+      height: 75vh;
+      background: #000;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    /* Modal Styling General */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-box {
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .modal-box button {
+      background: #0095f6;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .pin-input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 12px;
+      border: 1px solid #dbdbdb;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      outline: none;
+    }
+
+    .pin-input:focus {
+      border-color: #0095f6;
+    }
+
+    .error-msg {
+      color: #ed4956;
+      font-size: 0.75rem;
+      margin-top: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ig-container">
+    <!-- Navbar Top -->
+    <div class="nav-bar">
+      <span class="nav-title">our_journey ❤️</span>
+      <span style="font-size: 1.2rem;">🔒</span>
+    </div>
+
+    <!-- Profile Header -->
+    <div class="profile-section">
+      <div class="profile-header">
+        <div class="avatar-wrapper" onclick="openProfileStory()">
+          <img src="profile.jpg" alt="Profile" class="avatar" onerror="this.src='https://via.placeholder.com/150'">
+        </div>
+        <div class="stats">
+          <div>
+            <div class="stat-num">730</div>
+            <div class="stat-label">Hari Bareng</div>
+          </div>
+          <div>
+            <div class="stat-num">3</div>
+            <div class="stat-label">Postingan</div>
+          </div>
+          <div>
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Cinta</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bio-text">
+        <strong>Our Special Chapter ✨</strong><br>
+        Happy Anniversary! Terima kasih sudah tumbuh dan berjalan bareng sampai hari ini. 💕<br>
+        <a href="javascript:void(0)" onclick="openPinModal()" style="color: #00376b; text-decoration: none; font-weight: 600;">📍 Klik pesan rahasia di sini!</a>
+      </div>
+    </div>
+
+    <!-- Highlights -->
+    <div class="highlights">
+      <div class="highlight-item" onclick="openStory('sorotan1.mp4', 'Awal Ketemu')">
+        <div class="highlight-circle">
+          <img src="tumb1.jpg" alt="Awal Ketemu" onerror="this.src='https://via.placeholder.com/100'">
+        </div>
+        <span>Day One</span>
+      </div>
+
+      <div class="highlight-item" onclick="openStory('sorotan2.mp4', 'Day 2')">
+        <div class="highlight-circle">
+          <img src="tumb2.jpg" alt="Day 2" onerror="this.src='https://via.placeholder.com/100'">
+        </div>
+        <span>Day 2</span>
+      </div>
+
+      <div class="highlight-item" onclick="openStory('sorotan3.mp4', 'Day 3')">
+        <div class="highlight-circle">
+          <img src="tumb3.jpg" alt="Day 3" onerror="this.src='https://via.placeholder.com/100'">
+        </div>
+        <span>Last Day</span>
+      </div>
+
+      <div class="highlight-item" onclick="openStory('fav.mp4', 'Favorit')">
+        <div class="highlight-circle">
+          <img src="tumb4.jpg" alt="Favorit" onerror="this.src='https://via.placeholder.com/100'">
+        </div>
+        <span>Favorit</span>
+      </div>
+    </div>
+
+    <!-- FEED POST 1 -->
+    <div class="post">
+      <div class="post-header">
+        <img src="profile.jpg" class="post-avatar" alt="User" onerror="this.src='https://via.placeholder.com/150'">
+        <span class="post-username">our_journey</span>
+      </div>
+
+      <div class="carousel-wrapper">
+        <div class="carousel-badge" id="badge-post1">1/3</div>
+        <button class="carousel-btn prev" onclick="scrollCarousel('carousel-post1', -1)">‹</button>
+        <button class="carousel-btn next" onclick="scrollCarousel('carousel-post1', 1)">›</button>
+
+        <div class="carousel-container" id="carousel-post1" onscroll="updateBadge(this, 'badge-post1')">
+          <div class="carousel-slide">
+            <img src="post1_1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/450x450'">
+          </div>
+          <div class="carousel-slide">
+            <img src="post1_2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/450x450'">
+          </div>
+          <div class="carousel-slide">
+            <video controls playsinline preload="metadata">
+              <source src="post1_3.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+
+      <div class="post-actions">
+        <span class="like-btn" onclick="toggleLike(this, 'likeCount1')">🤍</span>
+        <span>💬</span>
+        <span>✈️</span>
+      </div>
+
+      <div class="post-likes" id="likeCount1">1,000,000 suka</div>
+
+      <div class="post-caption">
+        <strong>our_journey</strong> Chapter 1: Tempat awal di mana semuanya dimulai. Geser atau klik panah buat lihat videonya! ✨❤️
+      </div>
+    </div>
+
+    <!-- FEED POST 2 -->
+    <div class="post">
+      <div class="post-header">
+        <img src="profile.jpg" class="post-avatar" alt="User" onerror="this.src='https://via.placeholder.com/150'">
+        <span class="post-username">our_journey</span>
+      </div>
+
+      <div class="carousel-wrapper">
+        <div class="carousel-badge" id="badge-post2">1/3</div>
+        <button class="carousel-btn prev" onclick="scrollCarousel('carousel-post2', -1)">‹</button>
+        <button class="carousel-btn next" onclick="scrollCarousel('carousel-post2', 1)">›</button>
+
+        <div class="carousel-container" id="carousel-post2" onscroll="updateBadge(this, 'badge-post2')">
+          <div class="carousel-slide">
+            <img src="post2_1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/450x450'">
+          </div>
+          <div class="carousel-slide">
+            <img src="post2_2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/450x450'">
+          </div>
+          <div class="carousel-slide">
+            <img src="post2_3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/450x450'">
+          </div>
+        </div>
+      </div>
+
+      <div class="post-actions">
+        <span class="like-btn" onclick="toggleLike(this, 'likeCount2')">🤍</span>
+        <span>💬</span>
+        <span>✈️</span>
+      </div>
+
+      <div class="post-likes" id="likeCount2">1,000,000 suka</div>
+
+      <div class="post-caption">
+        <strong>our_journey</strong> Chapter 2: Tiap momen, ketawa, dan jalan-jalan bareng kamu selalu jadi favoritku. 📸✨
+      </div>
+    </div>
+
+    <!-- FEED POST 3 -->
+    <div class="post">
+      <div class="post-header">
+        <img src="profile.jpg" class="post-avatar" alt="User" onerror="this.src='https://via.placeholder.com/150'">
+        <span class="post-username">our_journey</span>
+      </div>
+
+      <div class="carousel-wrapper">
+        <div class="carousel-badge" id="badge-post3">1/3</div>
+        <button class="carousel-btn prev" onclick="scrollCarousel('carousel-post3', -1)">‹</button>
+        <button class="carousel-btn next" onclick="scrollCarousel('carousel-post3', 1)">›</button>
+
+        <div class="carousel-container" id="carousel-post3" onscroll="updateBadge(this, 'badge-post3')">
+          <div class="carousel-slide">
+            <video controls playsinline preload="metadata">
+              <source src="pos3.1.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="carousel-slide">
+            <video controls playsinline preload="metadata">
+              <source src="POST3sleep.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="carousel-slide">
+            <video controls playsinline preload="metadata">
+              <source src="post3_1.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="carousel-slide">
+            <img src="duyung.png" alt="Foto 3" onerror="this.src='https://via.placeholder.com/450x450'">
+          </div>
+        </div>
+      </div>
+
+      <div class="post-actions">
+        <span class="like-btn" onclick="toggleLike(this, 'likeCount3')">🤍</span>
+        <span>💬</span>
+        <span>✈️</span>
+      </div>
+
+      <div class="post-likes" id="likeCount3">1,000,000 suka</div>
+
+      <div class="post-caption">
+        <strong>our_journey</strong> Chapter 3: Aibbb mweheheheheheehe🤣, jann marahh heehh🤭
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Profile Video Story Modal -->
+  <div class="profile-story-modal" id="profileStoryModal">
+    <div class="video-story-card">
+      <div class="story-progress-bar">
+        <div class="story-progress-fill" id="storyProgress"></div>
+      </div>
+
+      <div class="video-story-header">
+        <div class="video-story-user">
+          <img src="profile.jpg" class="video-story-avatar" alt="User" onerror="this.src='https://via.placeholder.com/150'">
+          <span class="video-story-username">our_journey</span>
+          <span class="video-story-time">24j</span>
+        </div>
+        <div class="video-story-controls">
+          <span class="sound-btn" id="soundBtn" onclick="toggleVideoSound('profileStoryVideo', 'soundBtn')">🔊</span>
+          <span class="close-video-story" onclick="closeProfileStory()">&times;</span>
+        </div>
+      </div>
+
+      <video id="profileStoryVideo" class="story-video-player" playsinline preload="auto">
+        <source src="story.mp4" type="video/mp4">
+      </video>
+
+      <div class="video-story-footer">
+        <input type="text" class="story-reply-input" placeholder="Kirim pesan...">
+        <span class="story-like-icon">❤️</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pop-up Sorotan Video Viewer -->
+  <div class="story-modal" id="storyModal" onclick="closeStory()">
+    <div class="story-card-popup" onclick="event.stopPropagation()">
+      <div class="story-progress-bar">
+        <div class="story-progress-fill" id="highlightProgress"></div>
+      </div>
+
+      <div class="video-story-header">
+        <div class="video-story-user">
+          <img src="profile.jpg" class="video-story-avatar" alt="User" onerror="this.src='https://via.placeholder.com/150'">
+          <span class="video-story-username" id="storyTitle">our_journey</span>
+        </div>
+        <div class="video-story-controls">
+          <span class="sound-btn" id="highlightSoundBtn" onclick="toggleVideoSound('storyVideo', 'highlightSoundBtn')">🔊</span>
+          <span class="close-video-story" onclick="closeStory()">&times;</span>
+        </div>
+      </div>
+
+      <video id="storyVideo" class="story-video-player" playsinline preload="auto"></video>
+
+      <div class="video-story-footer">
+        <input type="text" class="story-reply-input" placeholder="Kirim pesan...">
+        <span class="story-like-icon">❤️</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 1: Input PIN -->
+  <div class="modal" id="pinModal">
+    <div class="modal-box">
+      <h3 style="color: #262626; margin-bottom: 8px;">Pesan Terkunci 🔒</h3>
+      <p style="font-size: 0.85rem; color: #737373;">Coba tebak sendiri (DDMMYY):</p>
+      
+      <input type="password" id="pinInput" class="pin-input" maxlength="6" placeholder="******" pattern="\d*">
+      <div class="error-msg" id="errorMsg">PIN salah, Ayo pikirkan secara logika! 😜</div>
+      
+      <div style="display: flex; gap: 8px; justify-content: center;">
+        <button onclick="checkPin()" style="flex: 1;">Buka 🔓</button>
+        <button onclick="closePinModal()" style="background: #efefef; color: #262626; flex: 1;">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Pesan Rahasia Bio -->
+  <div class="modal" id="secretModal">
+    <div class="modal-box">
+      <h3 style="color: #e1306c; margin-bottom: 10px;">Congratulations! 🎉</h3>
+      <p style="font-size: 0.9rem; line-height: 1.5; color: #444;">
+        Cieee beliau udah tau PIN-nya... Gak kerasa ya udah 2 tahun aja kita bareng. Jujur aku kangen banget sama kamu, pengen banget sesekali peluk kamu lagi. Kalo kamu gimana? 🥰
+      </p>
+      <button onclick="closeSecret()">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    // Fungsi Geser Carousel lewat Tombol Panah
+    function scrollCarousel(containerId, direction) {
+      const container = document.getElementById(containerId);
+      const slideWidth = container.clientWidth;
+      container.scrollBy({
+        left: direction * slideWidth,
+        behavior: 'smooth'
+      });
+    }
+
+    // Update Indikator Halaman (Contoh: 1/3, 2/3, 3/3)
+    function updateBadge(container, badgeId) {
+      const scrollLeft = container.scrollLeft;
+      const width = container.clientWidth;
+      const index = Math.round(scrollLeft / width) + 1;
+      const total = container.children.length;
+      document.getElementById(badgeId).textContent = index + '/' + total;
+    }
+
+    // 1. Profile Video Story Modal
+    const profileStoryModal = document.getElementById('profileStoryModal');
+    const profileStoryVideo = document.getElementById('profileStoryVideo');
+    const storyProgress = document.getElementById('storyProgress');
+    const soundBtn = document.getElementById('soundBtn');
+
+    function openProfileStory() {
+      profileStoryModal.style.display = 'flex';
+      profileStoryVideo.currentTime = 0;
+      profileStoryVideo.muted = false;
+      soundBtn.textContent = '🔊';
+
+      const playPromise = profileStoryVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          profileStoryVideo.muted = true;
+          soundBtn.textContent = '🔇';
+          profileStoryVideo.play();
+        });
+      }
+    }
+
+    function closeProfileStory() {
+      profileStoryModal.style.display = 'none';
+      profileStoryVideo.pause();
+      storyProgress.style.width = '0%';
+    }
+
+    profileStoryVideo.ontimeupdate = function() {
+      if (profileStoryVideo.duration) {
+        const percentage = (profileStoryVideo.currentTime / profileStoryVideo.duration) * 100;
+        storyProgress.style.width = percentage + '%';
+      }
+    };
+
+    profileStoryVideo.onended = closeProfileStory;
+
+    // 2. Sorotan Video Pop-up Modal
+    const storyModal = document.getElementById('storyModal');
+    const storyVideo = document.getElementById('storyVideo');
+    const highlightProgress = document.getElementById('highlightProgress');
+    const highlightSoundBtn = document.getElementById('highlightSoundBtn');
+
+    function openStory(videoSrc, titleText) {
+      document.getElementById('storyTitle').textContent = titleText;
+      storyVideo.src = videoSrc;
+      storyModal.style.display = 'flex';
+      
+      storyVideo.currentTime = 0;
+      storyVideo.muted = false;
+      highlightSoundBtn.textContent = '🔊';
+
+      const playPromise = storyVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          storyVideo.muted = true;
+          highlightSoundBtn.textContent = '🔇';
+          storyVideo.play();
+        });
+      }
+    }
+
+    function closeStory() {
+      storyModal.style.display = 'none';
+      storyVideo.pause();
+      storyVideo.src = "";
+      highlightProgress.style.width = '0%';
+    }
+
+    storyVideo.ontimeupdate = function() {
+      if (storyVideo.duration) {
+        const percentage = (storyVideo.currentTime / storyVideo.duration) * 100;
+        highlightProgress.style.width = percentage + '%';
+      }
+    };
+
+    storyVideo.onended = closeStory;
+
+    // Helper Toggle Audio
+    function toggleVideoSound(videoId, btnId) {
+      const vid = document.getElementById(videoId);
+      const btn = document.getElementById(btnId);
+      if (vid.muted) {
+        vid.muted = false;
+        btn.textContent = '🔊';
+      } else {
+        vid.muted = true;
+        btn.textContent = '🔇';
+      }
+    }
+
+    // 3. Dynamic Like
+    function toggleLike(element, countId) {
+      const likeCount = document.getElementById(countId);
+      if (element.textContent === '🤍') {
+        element.textContent = '❤️';
+        likeCount.textContent = '1,000,001 suka';
+      } else {
+        element.textContent = '🤍';
+        likeCount.textContent = '1,000,000 suka';
+      }
+    }
+
+    // 4. PIN Lock
+    function openPinModal() {
+      document.getElementById('pinInput').value = '';
+      document.getElementById('errorMsg').style.display = 'none';
+      document.getElementById('pinModal').style.display = 'flex';
+    }
+
+    function closePinModal() {
+      document.getElementById('pinModal').style.display = 'none';
+    }
+
+    function checkPin() {
+      const input = document.getElementById('pinInput').value;
+      if (input === '110824') {
+        closePinModal();
+        document.getElementById('secretModal').style.display = 'flex';
+      } else {
+        document.getElementById('errorMsg').style.display = 'block';
+      }
+    }
+
+    function closeSecret() {
+      document.getElementById('secretModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
