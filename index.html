@@ -674,9 +674,6 @@
               <source src="post3_1.mp4" type="video/mp4">
             </video>
           </div>
-          <div class="carousel-slide">
-            <img src="duyung.png" alt="Foto 3" onerror="this.src='https://via.placeholder.com/450x450'">
-          </div>
         </div>
       </div>
 
@@ -709,12 +706,12 @@
           <span class="video-story-time">24j</span>
         </div>
         <div class="video-story-controls">
-          <span class="sound-btn" id="soundBtn" onclick="toggleVideoSound('profileStoryVideo', 'soundBtn')">🔊</span>
+          <span class="sound-btn" id="soundBtn" onclick="toggleVideoSound('profileStoryVideo', 'soundBtn')">🔇</span>
           <span class="close-video-story" onclick="closeProfileStory()">&times;</span>
         </div>
       </div>
 
-      <video id="profileStoryVideo" class="story-video-player" playsinline preload="auto">
+      <video id="profileStoryVideo" class="story-video-player" playsinline preload="auto" muted>
         <source src="story.mp4" type="video/mp4">
       </video>
 
@@ -738,12 +735,12 @@
           <span class="video-story-username" id="storyTitle">our_journey</span>
         </div>
         <div class="video-story-controls">
-          <span class="sound-btn" id="highlightSoundBtn" onclick="toggleVideoSound('storyVideo', 'highlightSoundBtn')">🔊</span>
+          <span class="sound-btn" id="highlightSoundBtn" onclick="toggleVideoSound('storyVideo', 'highlightSoundBtn')">🔇</span>
           <span class="close-video-story" onclick="closeStory()">&times;</span>
         </div>
       </div>
 
-      <video id="storyVideo" class="story-video-player" playsinline preload="auto"></video>
+      <video id="storyVideo" class="story-video-player" playsinline preload="auto" muted></video>
 
       <div class="video-story-footer">
         <input type="text" class="story-reply-input" placeholder="Kirim pesan...">
@@ -808,17 +805,12 @@
     function openProfileStory() {
       profileStoryModal.style.display = 'flex';
       profileStoryVideo.currentTime = 0;
-      profileStoryVideo.muted = false;
-      soundBtn.textContent = '🔊';
+      profileStoryVideo.muted = true;
+      soundBtn.textContent = '🔇';
 
-      const playPromise = profileStoryVideo.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          profileStoryVideo.muted = true;
-          soundBtn.textContent = '🔇';
-          profileStoryVideo.play();
-        });
-      }
+      profileStoryVideo.play().catch(error => {
+        console.log("Autoplay diblokir:", error);
+      });
     }
 
     function closeProfileStory() {
@@ -848,17 +840,12 @@
       storyModal.style.display = 'flex';
       
       storyVideo.currentTime = 0;
-      storyVideo.muted = false;
-      highlightSoundBtn.textContent = '🔊';
+      storyVideo.muted = true;
+      highlightSoundBtn.textContent = '🔇';
 
-      const playPromise = storyVideo.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          storyVideo.muted = true;
-          highlightSoundBtn.textContent = '🔇';
-          storyVideo.play();
-        });
-      }
+      storyVideo.play().catch(error => {
+        console.log("Autoplay diblokir:", error);
+      });
     }
 
     function closeStory() {
