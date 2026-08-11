@@ -532,7 +532,7 @@
 
       <div class="bio-text">
         <strong>Our Special Chapter ✨</strong><br>
-        Happy Anniversary! Terima kasih sudah tumbuh dan berjalan bareng sampai hari ini. 💕<br>
+        Happy Anniversary! Makasiih udah mau sama sama mertahanin hubungan ini, luvvv.💖💕<br>
         <a href="javascript:void(0)" onclick="openPinModal()" style="color: #00376b; text-decoration: none; font-weight: 600;">📍 Klik pesan rahasia di sini!</a>
       </div>
     </div>
@@ -604,7 +604,7 @@
       <div class="post-likes" id="likeCount1">1,000,000 suka</div>
 
       <div class="post-caption">
-        <strong>our_journey</strong> Chapter 1: Tempat awal di mana semuanya dimulai. Geser atau klik panah buat lihat videonya! ✨❤️
+        <strong>our_journey</strong> Chapter 1: Dari awal kenal sampe bener bener ketemuan.✨
       </div>
     </div>
 
@@ -642,7 +642,7 @@
       <div class="post-likes" id="likeCount2">1,000,000 suka</div>
 
       <div class="post-caption">
-        <strong>our_journey</strong> Chapter 2: Tiap momen, ketawa, dan jalan-jalan bareng kamu selalu jadi favoritku. 📸✨
+        <strong>our_journey</strong> Chapter 2: Edisi pertama kali njemput princess.📸✨
       </div>
     </div>
 
@@ -673,6 +673,9 @@
             <video controls playsinline preload="metadata">
               <source src="post3_1.mp4" type="video/mp4">
             </video>
+          </div>
+          <div class="carousel-slide">
+            <img src="duyung.png" alt="Foto 3" onerror="this.src='https://via.placeholder.com/450x450'">
           </div>
         </div>
       </div>
@@ -706,12 +709,12 @@
           <span class="video-story-time">24j</span>
         </div>
         <div class="video-story-controls">
-          <span class="sound-btn" id="soundBtn" onclick="toggleVideoSound('profileStoryVideo', 'soundBtn')">🔇</span>
+          <span class="sound-btn" id="soundBtn" onclick="toggleVideoSound('profileStoryVideo', 'soundBtn')">🔊</span>
           <span class="close-video-story" onclick="closeProfileStory()">&times;</span>
         </div>
       </div>
 
-      <video id="profileStoryVideo" class="story-video-player" playsinline preload="auto" muted>
+      <video id="profileStoryVideo" class="story-video-player" playsinline preload="auto">
         <source src="story.mp4" type="video/mp4">
       </video>
 
@@ -735,12 +738,12 @@
           <span class="video-story-username" id="storyTitle">our_journey</span>
         </div>
         <div class="video-story-controls">
-          <span class="sound-btn" id="highlightSoundBtn" onclick="toggleVideoSound('storyVideo', 'highlightSoundBtn')">🔇</span>
+          <span class="sound-btn" id="highlightSoundBtn" onclick="toggleVideoSound('storyVideo', 'highlightSoundBtn')">🔊</span>
           <span class="close-video-story" onclick="closeStory()">&times;</span>
         </div>
       </div>
 
-      <video id="storyVideo" class="story-video-player" playsinline preload="auto" muted></video>
+      <video id="storyVideo" class="story-video-player" playsinline preload="auto"></video>
 
       <div class="video-story-footer">
         <input type="text" class="story-reply-input" placeholder="Kirim pesan...">
@@ -805,12 +808,17 @@
     function openProfileStory() {
       profileStoryModal.style.display = 'flex';
       profileStoryVideo.currentTime = 0;
-      profileStoryVideo.muted = true;
-      soundBtn.textContent = '🔇';
+      profileStoryVideo.muted = false;
+      soundBtn.textContent = '🔊';
 
-      profileStoryVideo.play().catch(error => {
-        console.log("Autoplay diblokir:", error);
-      });
+      const playPromise = profileStoryVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          profileStoryVideo.muted = true;
+          soundBtn.textContent = '🔇';
+          profileStoryVideo.play();
+        });
+      }
     }
 
     function closeProfileStory() {
@@ -840,12 +848,17 @@
       storyModal.style.display = 'flex';
       
       storyVideo.currentTime = 0;
-      storyVideo.muted = true;
-      highlightSoundBtn.textContent = '🔇';
+      storyVideo.muted = false;
+      highlightSoundBtn.textContent = '🔊';
 
-      storyVideo.play().catch(error => {
-        console.log("Autoplay diblokir:", error);
-      });
+      const playPromise = storyVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          storyVideo.muted = true;
+          highlightSoundBtn.textContent = '🔇';
+          storyVideo.play();
+        });
+      }
     }
 
     function closeStory() {
